@@ -28,6 +28,10 @@ with menu[0]:
 - Keuntungan per blender: Rp40.000  
 - Keuntungan per pemanggang roti: Rp60.000  
 - Waktu mesin: A = 2 jam, B = 3 jam
+
+**Model Matematis:**  
+Maksimalkan Z = 40x + 60y  
+Kendala: 2x + 3y ≤ 100, x ≥ 0, y ≥ 0
     """)
     
     if st.button("Hitung Optimasi Produksi"):
@@ -60,7 +64,13 @@ with menu[1]:
 **Studi Kasus:** Bengkel memerlukan 10.000 liter oli/tahun.
 - Biaya pemesanan: Rp50.000  
 - Biaya penyimpanan: Rp2.000/liter/tahun
-    """)
+
+**Rumus EOQ:**  
+\[
+EOQ = \sqrt{\frac{2DS}{H}}
+\]
+D = 10.000, S = 50.000, H = 2.000
+    """, unsafe_allow_html=True)
     
     D = 10000
     S = 50000
@@ -88,7 +98,14 @@ with menu[2]:
     st.markdown("""
 **Studi Kasus:** Loket pelayanan menerima 10 pelanggan/jam dan dapat melayani 12 pelanggan/jam.
 Distribusi kedatangan: Poisson, pelayanan: Eksponensial.
-    """)
+
+**Model Matematis:**
+\[
+L = \frac{\lambda}{\mu - \lambda}, \quad L_q = \frac{\lambda^2}{\mu(\mu - \lambda)} \\
+W = \frac{1}{\mu - \lambda}, \quad W_q = \frac{\lambda}{\mu(\mu - \lambda)}
+\]
+Dengan: λ = 10, μ = 12
+    """, unsafe_allow_html=True)
 
     lambd = 10
     mu = 12
@@ -121,7 +138,13 @@ with menu[3]:
 - Biaya tetap: Rp1.000.000  
 - Biaya variabel: Rp10.000/unit  
 - Harga jual: Rp20.000/unit
-    """)
+
+**Model Matematis:**  
+\[
+\text{BEP} = \frac{\text{Fixed Cost}}{\text{Harga Jual} - \text{Biaya Variabel}} = \frac{FC}{P - VC}
+\]  
+Dengan: FC = 1.000.000, VC = 10.000, P = 20.000
+    """, unsafe_allow_html=True)
 
     FC = 1_000_000
     VC = 10_000
