@@ -4,115 +4,115 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import linprog
 
-# Sidebar
-st.sidebar.title("📘 Dokumentasi Aplikasi")
+# Sidebar instructions
+st.sidebar.title("📘 Petunjuk Penggunaan")
 st.sidebar.markdown("""
-Aplikasi ini memiliki 4 menu utama:
+Pilih salah satu model di tab berikut:
+1. **Optimasi Produksi (Linear Programming)**
+2. **Model Persediaan (EOQ)**
+3. **Model Antrian (M/M/1)**
+4. **Model Break Even Point (BEP)**
 
-1. **Optimasi Produksi (Linear Programming)**: Menyelesaikan masalah optimasi produksi dengan metode Simpleks.
-   - Visualisasi: Bar chart hasil produksi optimal.
-2. **Model Persediaan (EOQ)**: Menghitung Economic Order Quantity.
-   - Visualisasi: Grafik Total Cost terhadap Order Quantity.
-3. **Model Antrian (M/M/1)**: Analisis sistem antrian dengan distribusi eksponensial.
-   - Visualisasi: Bar chart jumlah pelanggan dalam sistem dan antrian.
-4. **Model Industri Lain**: Contoh: Break-Even Analysis (Analisis Titik Impas).
-   - Visualisasi: Grafik Total Cost dan Total Revenue.
+Masukkan parameter yang dibutuhkan, hasil dan grafik akan ditampilkan.
 """)
 
-# Tab
-tab1, tab2, tab3, tab4 = st.tabs(["Optimasi Produksi", "Model Persediaan (EOQ)", "Model Antrian (M/M/1)", "Model Industri Lain"])
+# Tab menu utama
+menu = st.tabs(["Optimasi Produksi", "Model Persediaan", "Model Antrian", "Model BEP"])
 
-with tab1:
-    st.header("Optimasi Produksi - Linear Programming")
-    st.markdown("Masukkan data untuk memaksimalkan fungsi keuntungan.")
-    
-    profit = st.text_input("Koefisien Fungsi Objektif (pisahkan dengan koma, contoh: 40,30)", "40,30")
-    constraint1 = st.text_input("Kendala 1 (contoh: 1,1,<=40)", "1,1,<=40")
-    constraint2 = st.text_input("Kendala 2 (contoh: 2,1,<=60)", "2,1,<=60")
+# 1. Optimasi Produksi (Linear Programming)
+with menu[0]:
+    st.header("🔧 Optimasi Produksi - Linear Programming")
+    st.markdown("Gunakan metode LP untuk memaksimalkan profit atau meminimalkan biaya.")
+
+    c1 = st.number_input("Profit per unit Produk A", value=20.0)
+    c2 = st.number_input("Profit per unit Produk B", value=30.0)
+    a11 = st.number_input("Waktu kerja per unit A (jam)", value=2.0)
+    a12 = st.number_input("Waktu kerja per unit B (jam)", value=1.0)
+    b1 = st.number_input("Total jam kerja tersedia", value=100.0)
 
     if st.button("Hitung Optimasi"):
-        c = -np.array([float(i) for i in profit.split(",")])
-        A = []
-        b = []
-
-        for cons in [constraint1, constraint2]:
-            parts = cons.split(',')
-            A.append([float(parts[0]), float(parts[1])])
-            b.append(float(parts[3]))
-
-        res = linprog(c, A_ub=A, b_ub=b)
-
+        res = linprog(c=[-c1, -c2], A_ub=[[a11, a12]], b_ub=[b1], bounds=[(0, None), (0, None)])
         if res.success:
-            st.success(f"Hasil Optimal: {res.x}, Total Keuntungan: {-res.fun}")
-            st.bar_chart(res.x)
-        else:
-            st.error("Optimasi gagal. Periksa input.")
+            st.success("Solusi ditemukan!")
+            st.write(f"Produksi A: {res.x[0]:.2f} unit")
+            st.write(f"Produksi B: {res.x[1]:.2f} unit")
+            st.write(f"Total Profit: {-res.fun:.2f}")
 
-with tab2:
-    st.header("Model Persediaan - EOQ")
-    D = st.number_input("Permintaan per tahun (D)", value=1000)
-    S = st.number_input("Biaya Pemesanan (S)", value=50)
-    H = st.number_input("Biaya Penyimpanan per unit (H)", value=2)
+            fig, ax = plt.subplots()
+            ax.bar(["Produk A", "Produk B"], res.x)
+            ax.set_ylabel("Jumlah Produksi")
+            st.pyplot(fig)
+        else:
+            st.error("Gagal menemukan solusi.")
+
+# 2. Model Persediaan EOQ
+with menu[1]:
+    st.header("📦 Model Persediaan - EOQ")
+    D = st.number_input("Permintaan Tahunan (D)", value=1000.0)
+    S = st.number_input("Biaya Pemesanan (S)", value=50.0)
+    H = st.number_input("Biaya Penyimpanan per unit (H)", value=2.0)
 
     if st.button("Hitung EOQ"):
         eoq = np.sqrt((2 * D * S) / H)
         st.success(f"EOQ: {eoq:.2f} unit")
 
+        Q = np.linspace(1, 2 * eoq, 100)
+        TC = D/Q * S + Q/2 * H
+
         fig, ax = plt.subplots()
-        Q = np.linspace(1, 2*eoq, 100)
-        TC = D/Q*S + Q/2*H
         ax.plot(Q, TC, label="Total Cost")
-        ax.axvline(eoq, color='r', linestyle='--', label=f'EOQ = {eoq:.2f}')
-        ax.set_xlabel('Order Quantity (Q)')
-        ax.set_ylabel('Total Cost')
+        ax.axvline(eoq, color='r', linestyle='--', label="EOQ")
+        ax.set_xlabel("Order Quantity")
+        ax.set_ylabel("Total Cost")
         ax.legend()
         st.pyplot(fig)
 
-with tab3:
-    st.header("Model Antrian - M/M/1")
-    lam = st.number_input("Laju kedatangan (λ)", value=5.0)
-    mu = st.number_input("Laju pelayanan (μ)", value=8.0)
+# 3. Model Antrian M/M/1
+with menu[2]:
+    st.header("⏳ Model Antrian - M/M/1")
+    lambd = st.number_input("Laju Kedatangan (λ)", value=2.0)
+    mu = st.number_input("Laju Pelayanan (μ)", value=3.0)
 
-    if st.button("Hitung Model Antrian"):
-        if lam >= mu:
-            st.error("Sistem tidak stabil (λ >= μ)")
-        else:
-            rho = lam / mu
-            Lq = rho**2 / (1 - rho)
-            Wq = Lq / lam
-            L = lam / (mu - lam)
-            W = 1 / (mu - lam)
-            st.write(f"Utilisasi: {rho:.2f}")
-            st.write(f"Rata-rata pelanggan dalam antrian (Lq): {Lq:.2f}")
-            st.write(f"Rata-rata waktu dalam antrian (Wq): {Wq:.2f}")
-            st.write(f"Rata-rata pelanggan dalam sistem (L): {L:.2f}")
-            st.write(f"Rata-rata waktu dalam sistem (W): {W:.2f}")
+    if lambd >= mu:
+        st.error("Sistem tidak stabil. Pastikan λ < μ")
+    else:
+        L = lambd / (mu - lambd)
+        Lq = lambd**2 / (mu * (mu - lambd))
+        W = 1 / (mu - lambd)
+        Wq = lambd / (mu * (mu - lambd))
 
-            labels = ['Dalam Antrian', 'Dalam Sistem']
-            values = [Lq, L]
-            fig, ax = plt.subplots()
-            ax.bar(labels, values, color=['orange', 'green'])
-            st.pyplot(fig)
+        st.write(f"Rata-rata jumlah dalam sistem (L): {L:.2f}")
+        st.write(f"Rata-rata waktu dalam sistem (W): {W:.2f} jam")
+        st.write(f"Rata-rata jumlah dalam antrian (Lq): {Lq:.2f}")
+        st.write(f"Rata-rata waktu tunggu (Wq): {Wq:.2f} jam")
 
-with tab4:
-    st.header("Model Industri Lain - Break Even Point")
-    FC = st.number_input("Fixed Cost (FC)", value=10000)
-    VC = st.number_input("Variable Cost per Unit (VC)", value=10)
-    P = st.number_input("Harga Jual per Unit (P)", value=20)
+        fig, ax = plt.subplots()
+        ax.bar(["L", "Lq"], [L, Lq], color=['blue', 'orange'])
+        ax.set_ylabel("Jumlah rata-rata")
+        st.pyplot(fig)
 
-    if st.button("Hitung Break Even"):
-        if P <= VC:
-            st.error("Harga jual harus lebih besar dari biaya variabel.")
-        else:
-            BEP = FC / (P - VC)
-            st.success(f"Break-Even Point: {BEP:.2f} unit")
-            x = np.linspace(0, BEP*2, 100)
-            total_cost = FC + VC * x
-            total_revenue = P * x
+# 4. Model Matematika Tambahan: Break Even Point
+with menu[3]:
+    st.header("📈 Model Break Even Point (BEP)")
+    fc = st.number_input("Biaya Tetap (Fixed Cost)", value=1000.0)
+    vc = st.number_input("Biaya Variabel per Unit", value=10.0)
+    p = st.number_input("Harga Jual per Unit", value=20.0)
 
-            fig, ax = plt.subplots()
-            ax.plot(x, total_cost, label="Total Cost")
-            ax.plot(x, total_revenue, label="Total Revenue")
-            ax.axvline(BEP, color='r', linestyle='--', label=f'BEP = {BEP:.2f}')
-            ax.legend()
-            st.pyplot(fig)
+    if p <= vc:
+        st.error("Harga jual harus lebih besar dari biaya variabel.")
+    else:
+        bep = fc / (p - vc)
+        st.success(f"Break Even Point: {bep:.2f} unit")
+
+        Q = np.linspace(0, 2 * bep, 100)
+        TR = p * Q
+        TC = fc + vc * Q
+
+        fig, ax = plt.subplots()
+        ax.plot(Q, TR, label="Total Revenue")
+        ax.plot(Q, TC, label="Total Cost")
+        ax.axvline(bep, color='red', linestyle='--', label="BEP")
+        ax.set_xlabel("Jumlah Produksi")
+        ax.set_ylabel("Biaya / Pendapatan")
+        ax.legend()
+        st.pyplot(fig)
