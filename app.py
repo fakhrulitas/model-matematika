@@ -10,9 +10,13 @@ st.sidebar.markdown("""
 Aplikasi ini memiliki 4 menu utama:
 
 1. **Optimasi Produksi (Linear Programming)**: Menyelesaikan masalah optimasi produksi dengan metode Simpleks.
+   - Visualisasi: Bar chart hasil produksi optimal.
 2. **Model Persediaan (EOQ)**: Menghitung Economic Order Quantity.
+   - Visualisasi: Grafik Total Cost terhadap Order Quantity.
 3. **Model Antrian (M/M/1)**: Analisis sistem antrian dengan distribusi eksponensial.
+   - Visualisasi: Bar chart jumlah pelanggan dalam sistem dan antrian.
 4. **Model Industri Lain**: Contoh: Break-Even Analysis (Analisis Titik Impas).
+   - Visualisasi: Grafik Total Cost dan Total Revenue.
 """)
 
 # Tab
