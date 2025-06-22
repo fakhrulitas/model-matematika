@@ -23,17 +23,18 @@ menu = st.tabs(["Optimasi Produksi", "Model Persediaan", "Model Antrian", "Model
 # 1. Optimasi Produksi
 with menu[0]:
     st.header("🔧 Optimasi Produksi - Linear Programming")
-    st.markdown("""
-**Model Matematis:**  
-Maksimalkan Z = 40x + 60y  
-Kendala: 2x + 3y ≤ 100, x ≥ 0, y ≥ 0
-    """)
 
-    c1 = st.number_input("Keuntungan per unit Produk A (x)", value=40)
-    c2 = st.number_input("Keuntungan per unit Produk B (y)", value=60)
+    c1 = st.number_input("Keuntungan per unit Produk A (x)", value=40.0)
+    c2 = st.number_input("Keuntungan per unit Produk B (y)", value=60.0)
     a1 = st.number_input("Jam mesin untuk Produk A (x)", value=2.0)
     a2 = st.number_input("Jam mesin untuk Produk B (y)", value=3.0)
     kapasitas = st.number_input("Total kapasitas jam mesin", value=100.0)
+
+    st.markdown(f"""
+**Model Matematis:**  
+Maksimalkan Z = {c1:.0f}x + {c2:.0f}y  
+Kendala: {a1:.0f}x + {a2:.0f}y ≤ {kapasitas:.0f}, x ≥ 0, y ≥ 0
+    """)
 
     if st.button("Hitung Optimasi Produksi"):
         c = [-c1, -c2]
@@ -60,16 +61,17 @@ Kendala: 2x + 3y ≤ 100, x ≥ 0, y ≥ 0
 # 2. EOQ Model
 with menu[1]:
     st.header("📦 Model Persediaan - EOQ")
-    st.markdown("""
-**Rumus EOQ:**  
-\[
-EOQ = \sqrt{\frac{2DS}{H}}
-\]
-    """, unsafe_allow_html=True)
 
     D = st.number_input("Permintaan Tahunan (D)", value=10000.0)
     S = st.number_input("Biaya Pemesanan per Pesanan (S)", value=50000.0)
     H = st.number_input("Biaya Penyimpanan per unit per tahun (H)", value=2000.0)
+
+    st.markdown(f"""
+**Rumus EOQ:**  
+\[
+EOQ = \sqrt{{\frac{{2 \times {D:.0f} \times {S:.0f}}}{{{H:.0f}}}}} = \sqrt{{\frac{{{2*D*S:.0f}}}{{{H:.0f}}}}}
+\]
+    """, unsafe_allow_html=True)
 
     if st.button("Hitung EOQ"):
         eoq = np.sqrt((2 * D * S) / H)
@@ -91,16 +93,17 @@ EOQ = \sqrt{\frac{2DS}{H}}
 # 3. Antrian M/M/1
 with menu[2]:
     st.header("⏳ Model Antrian - M/M/1")
-    st.markdown("""
-**Model Matematis:**
-\[
-L = \frac{\lambda}{\mu - \lambda}, \quad L_q = \frac{\lambda^2}{\mu(\mu - \lambda)} \\
-W = \frac{1}{\mu - \lambda}, \quad W_q = \frac{\lambda}{\mu(\mu - \lambda)}
-\]
-    """, unsafe_allow_html=True)
 
     lambd = st.number_input("Laju Kedatangan (λ)", value=10.0)
     mu = st.number_input("Laju Pelayanan (μ)", value=12.0)
+
+    st.markdown(f"""
+**Model Matematis:**
+\[
+L = \frac{{{lambd}}}{{{mu} - {lambd}}}, \quad L_q = \frac{{{lambd}^2}}{{{mu}({mu} - {lambd})}} \\
+W = \frac{{1}}{{{mu} - {lambd}}}, \quad W_q = \frac{{{lambd}}}{{{mu}({mu} - {lambd})}}
+\]
+    """, unsafe_allow_html=True)
 
     if lambd >= mu:
         st.error("Sistem tidak stabil (λ ≥ μ). Harus λ < μ.")
@@ -125,16 +128,17 @@ W = \frac{1}{\mu - \lambda}, \quad W_q = \frac{\lambda}{\mu(\mu - \lambda)}
 # 4. BEP Model
 with menu[3]:
     st.header("📈 Break Even Point (BEP)")
-    st.markdown("""
-**Rumus BEP:**  
-\[
-\text{BEP} = \frac{\text{FC}}{P - VC}
-\]  
-    """, unsafe_allow_html=True)
 
     FC = st.number_input("Biaya Tetap (Fixed Cost)", value=1_000_000.0)
     VC = st.number_input("Biaya Variabel per unit", value=10_000.0)
     P = st.number_input("Harga Jual per unit", value=20_000.0)
+
+    st.markdown(f"""
+**Rumus BEP:**  
+\[
+\text{{BEP}} = \frac{{{FC:.0f}}}{{{P:.0f} - {VC:.0f}}} = \frac{{\text{{FC}}}}{{P - VC}}
+\]  
+    """, unsafe_allow_html=True)
 
     if P <= VC:
         st.error("Harga jual harus lebih besar dari biaya variabel.")
