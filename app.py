@@ -146,7 +146,4 @@ with menu[3]:
         ax.legend()
         st.pyplot(fig)
 
-        st.caption("Interpretasi: Minimal produksi dan penjualan {0:.0f} unit untuk menutup semua biaya.")".format(bep)
-    }
-  ]
-}
+        st.caption(f"Interpretasi: Minimal produksi dan penjualan {bep:.0f} unit untuk menutup semua biaya.")
