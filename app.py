@@ -6,9 +6,6 @@ from math import sqrt
 from scipy.optimize import linprog
 import sympy as sp
 
-np.set_printoptions(suppress=True)
-np.set_printoptions(suppress=True, formatter={'float_kind':'{:,.2f}'.format})
-
 st.set_page_config(page_title="Industrial Math Models", layout="wide")
 
 # Sidebar Dokumentasi
@@ -181,6 +178,7 @@ with tab4:
     ax.plot(x, revenue, label='Pendapatan')
     ax.plot(x, total_cost, label='Biaya Total')
     ax.axvline(break_even, color='r', linestyle='--', label='Break-even')
+    ax.ticklabel_format(style='plain', axis='y')  # Tambahan untuk hilangkan 1e9
     ax.set_xlabel("Jumlah Unit")
     ax.set_ylabel("Rupiah (Rp)")
     ax.legend()
