@@ -47,12 +47,12 @@ with tab1:
         col1, col2 = st.columns(2)
 
         with col1:
-            profit_A = st.number_input("Keuntungan per unit Blender (Rp)", value=70000, step=1000, min_value=0)
-            time_A = st.number_input("Jam mesin per unit Blender", value=2.0, step=0.1, min_value=0.1)
+            profit_A = st.number_input("Keuntungan per unit Produk A (Rp)", value=70000, step=1000, min_value=0)
+            time_A = st.number_input("Jam mesin per unit Produk A", value=2.0, step=0.1, min_value=0.1)
 
         with col2:
-            profit_B = st.number_input("Keuntungan per unit Pemanggang Roti (Rp)", value=80000, step=1000, min_value=0)
-            time_B = st.number_input("Jam mesin per unit Pemanggang Roti", value=3.0, step=0.1, min_value=0.1)
+            profit_B = st.number_input("Keuntungan per unit Produk B (Rp)", value=80000, step=1000, min_value=0)
+            time_B = st.number_input("Jam mesin per unit Produk B", value=3.0, step=0.1, min_value=0.1)
 
         total_time = st.number_input("Total jam mesin tersedia per minggu", value=100.0, step=1.0, min_value=1.0)
 
@@ -74,8 +74,8 @@ with tab1:
             max_profit = -result.fun
 
             st.success("Solusi optimal ditemukan ✅")
-            st.write(f"🔹 Jumlah Blender (Produk A): **{x:.2f} unit**")
-            st.write(f"🔹 Jumlah Pemanggang Roti (Produk B): **{y:.2f} unit**")
+            st.write(f"🔹 Jumlah Produk A: **{x:.2f} unit**")
+            st.write(f"🔹 Jumlah Produk B: **{y:.2f} unit**")
             st.write(f"💰 Total keuntungan maksimal: Rp {max_profit:,.0f}")
 
             fig, ax = plt.subplots(figsize=(7, 5))
@@ -88,8 +88,8 @@ with tab1:
             ax.scatter(x, y, color="red", zorder=5, label="Solusi Optimal")
             ax.set_xlim(left=0)
             ax.set_ylim(bottom=0)
-            ax.set_xlabel("Unit Blender (Produk A)")
-            ax.set_ylabel("Unit Pemanggang Roti (Produk B)")
+            ax.set_xlabel("Unit Produk A")
+            ax.set_ylabel("Unit Produk B")
             ax.set_title("Visualisasi Optimasi Produksi")
             ax.legend()
             ax.grid(True)
