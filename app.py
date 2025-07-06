@@ -6,7 +6,7 @@ from math import sqrt
 from scipy.optimize import linprog
 import sympy as sp
 
-st.set_page_config(page_title="Industrial Math Models", layout="wide")
+st.set_page_config(page_title="Model Matematika", layout="wide")
 
 # Sidebar Dokumentasi
 st.sidebar.header("Panduan Aplikasi")
