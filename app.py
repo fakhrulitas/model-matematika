@@ -32,7 +32,7 @@ tab1, tab2, tab3, tab4 = st.tabs([
 ])
 
 with tab1:
-    st.title("\U0001F3ED Optimasi Produksi - PT. Sinar Terang")
+    st.title("\U0001F3ED OPTIMISASI PRODUKSI – PT. SINAR TERANG")
     st.markdown("""
     Aplikasi ini membantu menentukan jumlah produksi optimal untuk dua produk:
     - Produk A: Blender
@@ -98,7 +98,7 @@ with tab1:
             st.error("❌ Gagal menemukan solusi optimal.")
 
 with tab2:
-    st.header("\U0001F4E6 Kalkulator EOQ")
+    st.header("\U0001F4E6 MODEL PERSEDIAAN – EOQ (ECONOMIC ORDER QUANTITY)")
     st.write("""
     Aplikasi ini menghitung Economic Order Quantity (EOQ) dan visualisasi biaya total
     menggunakan rumus:
@@ -138,7 +138,7 @@ with tab2:
         st.metric(label="Biaya Total Minimum", value=f"Rp.{TC:,.2f}")
 
 with tab3:
-    st.header("\U0001F4C8 Studi Kasus Antrian – Layanan Pelanggan")
+    st.header("\U0001F4C8 MODEL  ANTRIAN – LAYANAN PELANGGAN")
 
     col1, col2 = st.columns(2)
     with col1:
@@ -162,7 +162,7 @@ with tab3:
     st.write(f"**Rata-rata waktu tunggu dalam antrean (Wq):** {Wq:.2f} jam")
 
 with tab4:
-    st.header("\U0001F4C9 Break-even Point Analysis")
+    st.header("\U0001F4C9 MODEL PRODUKSI INDUSTRI – BREAK-EVEN POINT (BEP)")
 
     fixed_cost = st.number_input("Biaya Tetap (Rp)", value=200_000_000)
     variable_cost = st.number_input("Biaya Variabel per Unit (Rp)", value=40000)
