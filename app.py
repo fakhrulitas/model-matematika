@@ -20,8 +20,7 @@ st.sidebar.markdown("""
 - Hitung EOQ dan biaya total optimal
 
 **3. Model Antrian**:
-- Simulasikan sistem antrian M/M/1
-- Visualisasi panjang antrian dan kinerja sistem
+- Simulasikan sistem antrian dan tampilkan metrik serta grafik ringkas
 
 **4. Break-even Point**:
 - Analisis titik impas produksi
@@ -33,7 +32,7 @@ tab1, tab2, tab3, tab4 = st.tabs([
 ])
 
 with tab1:
-    st.title("🏭 Optimasi Produksi - PT. Sinar Terang")
+    st.title("\U0001F3ED Optimasi Produksi - PT. Sinar Terang")
     st.markdown("""
     Aplikasi ini membantu menentukan jumlah produksi optimal untuk dua produk:
     - Produk A: Blender
@@ -43,7 +42,7 @@ with tab1:
     """)
 
     with st.form("input_form"):
-        st.subheader("🔧 Masukkan Parameter Produksi")
+        st.subheader("\U0001F527 Masukkan Parameter Produksi")
 
         col1, col2 = st.columns(2)
 
@@ -57,7 +56,7 @@ with tab1:
 
         total_time = st.number_input("Total jam mesin tersedia per minggu", value=100.0, step=1.0, min_value=1.0)
 
-        submitted = st.form_submit_button("🔍 Hitung Produksi Optimal")
+        submitted = st.form_submit_button("\U0001F50D Hitung Produksi Optimal")
 
     if submitted:
         c = [-profit_A, -profit_B]
@@ -67,7 +66,7 @@ with tab1:
 
         result = linprog(c, A_ub=A, b_ub=b, bounds=bounds, method='highs')
 
-        st.subheader("📊 Hasil Optimasi")
+        st.subheader("\U0001F4CA Hasil Optimasi")
 
         if result.success:
             x = result.x[0]
@@ -99,7 +98,7 @@ with tab1:
             st.error("❌ Gagal menemukan solusi optimal.")
 
 with tab2:
-    st.header("📦 Kalkulator EOQ")
+    st.header("\U0001F4E6 Kalkulator EOQ")
     st.write("""
     Aplikasi ini menghitung Economic Order Quantity (EOQ) dan visualisasi biaya total
     menggunakan rumus:
@@ -131,7 +130,7 @@ with tab2:
     ax.grid(True)
     st.pyplot(fig)
 
-    st.subheader("📊 Hasil Perhitungan")
+    st.subheader("\U0001F4CA Hasil Perhitungan")
     result_col1, result_col2 = st.columns(2)
     with result_col1:
         st.metric(label="EOQ Optimal", value=f"{Q:.2f} unit")
@@ -139,12 +138,7 @@ with tab2:
         st.metric(label="Biaya Total Minimum", value=f"Rp.{TC:,.2f}")
 
 with tab3:
-    st.header("📈 Studi Kasus Antrian – Layanan Pelanggan")
-
-    st.markdown("""
-    Model ini mengevaluasi sistem antrian satu loket di kantor layanan pelanggan.
-    Distribusi kedatangan diasumsikan Poisson, dan waktu pelayanan mengikuti eksponensial (Model M/M/1).
-    """)
+    st.header("\U0001F4C8 Studi Kasus Antrian – Layanan Pelanggan")
 
     col1, col2 = st.columns(2)
     with col1:
@@ -153,45 +147,22 @@ with tab3:
         mu = st.number_input("Tingkat Pelayanan (μ pelanggan/jam)", value=11.0, step=0.1)
 
     rho = lambda_ / mu
-    L = lambda_ / (mu - lambda_) if mu > lambda_ else float('inf')
     W = 1 / (mu - lambda_) if mu > lambda_ else float('inf')
     Wq = lambda_ / (mu * (mu - lambda_)) if mu > lambda_ else float('inf')
 
-    st.subheader("📊 Hasil Perhitungan")
-    st.write(f"**Tingkat Utilisasi (ρ)**: {rho:.2f}")
-    st.write(f"**Rata-rata Pelanggan dalam Sistem (L)**: {L:.2f}")
-    st.write(f"**Waktu Rata-rata di Sistem (W)**: {W:.2f} jam")
-    st.write(f"**Waktu Rata-rata Tunggu (Wq)**: {Wq:.2f} jam")
+    st.subheader("\U0001F4CA Ringkasan Waktu Rata-rata")
 
-    st.subheader("📉 Visualisasi Panjang Antrian (Simulasi 100 Pelanggan)")
-    np.random.seed(42)
-    num_customers = 100
-    inter_arrivals = np.random.exponential(1/lambda_, num_customers)
-    service_times = np.random.exponential(1/mu, num_customers)
-
-    arrival_times = np.cumsum(inter_arrivals)
-    start_times = np.zeros(num_customers)
-    end_times = np.zeros(num_customers)
-
-    for i in range(num_customers):
-        if i == 0:
-            start_times[i] = arrival_times[i]
-        else:
-            start_times[i] = max(arrival_times[i], end_times[i-1])
-        end_times[i] = start_times[i] + service_times[i]
-
-    queue_lengths = [np.sum((arrival_times <= t) & (end_times > t)) for t in arrival_times]
-
-    fig, ax = plt.subplots(figsize=(10,4))
-    ax.step(arrival_times, queue_lengths, where='post', color='darkorange')
-    ax.set_xlabel("Waktu (jam)")
-    ax.set_ylabel("Jumlah Pelanggan di Sistem")
-    ax.set_title("Simulasi Panjang Antrian dari Waktu ke Waktu")
-    ax.grid(True)
+    fig, ax = plt.subplots()
+    ax.bar(["Dalam Sistem", "Dalam Antrean"], [W, Wq], color=["blue", "orange"])
+    ax.set_ylabel("Waktu (jam)")
     st.pyplot(fig)
 
+    st.write(f"**Utilisasi Sistem (ρ):** {rho:.2f}")
+    st.write(f"**Rata-rata waktu di sistem (W):** {W:.2f} jam")
+    st.write(f"**Rata-rata waktu tunggu dalam antrean (Wq):** {Wq:.2f} jam")
+
 with tab4:
-    st.header("📉 Break-even Point Analysis")
+    st.header("\U0001F4C9 Break-even Point Analysis")
 
     fixed_cost = st.number_input("Biaya Tetap (Rp)", value=200_000_000)
     variable_cost = st.number_input("Biaya Variabel per Unit (Rp)", value=40000)
@@ -212,7 +183,7 @@ with tab4:
     ax.legend()
     ax.grid(True)
 
-    st.subheader("📊 Hasil Analisis")
+    st.subheader("\U0001F4CA Hasil Analisis")
     st.write(f"Break-even Point: {break_even:.2f} unit")
     st.pyplot(fig)
 
