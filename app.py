@@ -6,6 +6,9 @@ from math import sqrt
 from scipy.optimize import linprog
 import sympy as sp
 
+np.set_printoptions(suppress=True)
+np.set_printoptions(suppress=True, formatter={'float_kind':'{:,.2f}'.format})
+
 st.set_page_config(page_title="Industrial Math Models", layout="wide")
 
 # Sidebar Dokumentasi
