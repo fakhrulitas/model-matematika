@@ -43,7 +43,7 @@ with tab1:
     Tujuannya adalah untuk memaksimalkan keuntungan, dengan batasan waktu mesin yang tersedia per minggu.
     """)
 
-    with st.form("input_form"):
+  with st.form("input_form"):
     st.subheader("🔧 Masukkan Parameter Produksi")
 
     col1, col2 = st.columns(2)
@@ -63,8 +63,7 @@ with tab1:
     st.latex(f"Z = {profit_A}x + {profit_B}y")
 
     submitted = st.form_submit_button("🔍 Hitung Hasil Produksi Optimal")
-
-
+      
 
 if submitted:
     c = [-profit_A, -profit_B]
