@@ -32,7 +32,9 @@ tab1, tab2, tab3, tab4 = st.tabs([
 ])
 
 with tab1:
-    st.title("\U0001F3ED OPTIMISASI PRODUKSI – PT. SINAR TERANG")
+    st.set_page_config(page_title="Optimasi Produksi - PT. Sinar Terang", layout="centered")
+    st.title("🏭 Optimasi Produksi - PT. Sinar Terang")
+    
     st.markdown("""
     Aplikasi ini membantu menentukan jumlah produksi optimal untuk dua produk:
     - Produk A: Blender
@@ -42,60 +44,73 @@ with tab1:
     """)
 
     with st.form("input_form"):
-        st.subheader("\U0001F527 Masukkan Parameter Produksi")
+    st.subheader("🔧 Masukkan Parameter Produksi")
 
-        col1, col2 = st.columns(2)
+    col1, col2 = st.columns(2)
 
-        with col1:
-            profit_A = st.number_input("Keuntungan per unit Produk A (Rp)", value=70000, step=1000, min_value=0)
-            time_A = st.number_input("Jam mesin per unit Produk A", value=2.0, step=0.1, min_value=0.1)
+    with col1:
+        profit_A = st.number_input("Keuntungan per unit Blender (Rp)", key="profit_A", value=70000, step=1000, min_value=0)
+        time_A = st.number_input("Waktu mesin per unit Blender(jam)", key="time_A", value=2.0, step=0.1, min_value=0.1)
+    
+    with col2:
+        profit_B = st.number_input("Keuntungan per unit Pemanggang Roti (Rp)", key="profit_B", value=80000, step=1000, min_value=0)
+        time_B = st.number_input("Waktu mesin per unit Pemanggang Roti(jam)", key="time_B", value=3.0, step=0.1, min_value=0.1)
+    
+    total_time = st.number_input("Total jam mesin tersedia per minggu", key="total_time", value=100.0, step=1.0, min_value=1.0)
+    
+    # Tambahan baru: Menampilkan rumus fungsi tujuan
+    st.markdown("### 📈 Fungsi Objektif:")
+    st.latex(f"Z = {profit_A}x + {profit_B}y")
 
-        with col2:
-            profit_B = st.number_input("Keuntungan per unit Produk B (Rp)", value=80000, step=1000, min_value=0)
-            time_B = st.number_input("Jam mesin per unit Produk B", value=3.0, step=0.1, min_value=0.1)
+    submitted = st.form_submit_button("🔍 Hitung Hasil Produksi Optimal")
 
-        total_time = st.number_input("Total jam mesin tersedia per minggu", value=100.0, step=1.0, min_value=1.0)
 
-        submitted = st.form_submit_button("\U0001F50D Hitung Produksi Optimal")
 
-    if submitted:
-        c = [-profit_A, -profit_B]
-        A = [[time_A, time_B]]
-        b = [total_time]
-        bounds = [(0, None), (0, None)]
+if submitted:
+    c = [-profit_A, -profit_B]
+    A = [[time_A, time_B]]
+    b = [total_time]
+    bounds = [(0, None), (0, None)]
 
-        result = linprog(c, A_ub=A, b_ub=b, bounds=bounds, method='highs')
+    result = linprog(c, A_ub=A, b_ub=b, bounds=bounds, method='highs')
 
-        st.subheader("\U0001F4CA Hasil Optimasi")
+    st.subheader("📊 Hasil Optimasi")
 
-        if result.success:
-            x = result.x[0]
-            y = result.x[1]
-            max_profit = -result.fun
+    if result.success:
+        x = result.x[0]
+        y = result.x[1]
+        max_profit = -result.fun
 
-            st.success("Solusi optimal ditemukan ✅")
-            st.write(f"🔹 Jumlah Produk A: **{x:.2f} unit**")
-            st.write(f"🔹 Jumlah Produk B: **{y:.2f} unit**")
-            st.write(f"💰 Total keuntungan maksimal: Rp {max_profit:,.0f}")
+        st.success("Solusi optimal ditemukan ✅")
+        st.write(f"🔹 Jumlah Blender (Produk A): **{x:.2f} unit**")
+        st.write(f"🔹 Jumlah Pemanggang Roti (Produk B): **{y:.2f} unit**")
+        st.write(f"💰 Total keuntungan maksimal: Rp {max_profit:,.0f}")
 
-            fig, ax = plt.subplots(figsize=(7, 5))
-            x_vals = np.linspace(0, total_time / time_A + 5, 400)
-            y_vals = (total_time - time_A * x_vals) / time_B
-            y_vals = np.maximum(0, y_vals)
+        # ===== VISUALISASI =====
+        st.subheader("📉 Visualisasi Daerah Solusi & Titik Optimal")
 
-            ax.plot(x_vals, y_vals, label="Batas Waktu Mesin", color="blue")
-            ax.fill_between(x_vals, 0, y_vals, alpha=0.2, color="blue", label="Daerah Feasible")
-            ax.scatter(x, y, color="red", zorder=5, label="Solusi Optimal")
-            ax.set_xlim(left=0)
-            ax.set_ylim(bottom=0)
-            ax.set_xlabel("Unit Produk A")
-            ax.set_ylabel("Unit Produk B")
-            ax.set_title("Visualisasi Optimasi Produksi")
-            ax.legend()
-            ax.grid(True)
-            st.pyplot(fig)
-        else:
-            st.error("❌ Gagal menemukan solusi optimal.")
+        fig, ax = plt.subplots(figsize=(7, 5))
+
+        x_vals = np.linspace(0, total_time / time_A + 5, 400)
+        y_vals = (total_time - time_A * x_vals) / time_B
+        y_vals = np.maximum(0, y_vals)
+
+        ax.plot(x_vals, y_vals, label="Batas Waktu Mesin", color="blue")
+        ax.fill_between(x_vals, 0, y_vals, alpha=0.2, color="blue", label="Daerah Feasible")
+
+        ax.scatter(x, y, color="red", zorder=5, label="Solusi Optimal")
+        ax.set_xlim(left=0)
+        ax.set_ylim(bottom=0)
+        ax.set_xlabel("Unit Blender (Produk A)")
+        ax.set_ylabel("Unit Pemanggang Roti (Produk B)")
+        ax.set_title("Visualisasi Optimasi Produksi")
+        ax.legend()
+        ax.grid(True)
+
+        st.pyplot(fig)
+
+    else:
+        st.error("❌ Gagal menemukan solusi optimal.")
 
 with tab2:
     st.header("\U0001F4E6 MODEL PERSEDIAAN – EOQ (ECONOMIC ORDER QUANTITY)")
