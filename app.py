@@ -35,7 +35,7 @@ tab1, tab2, tab3, tab4 = st.tabs([
 ])
 
 with tab1:
-    st.title("🏭 Optimasi Produksi - PT. Sinar Terang Mandiri")
+    st.title("🏭 OPTIMASI PRODUKSI - PT SINAR TERANG MANDIRI")
     
     # Custom CSS styling
     st.markdown("""
@@ -74,8 +74,6 @@ with tab1:
     
     # Tambahkan logo
     st.markdown("<img src='https://mihzzrbqlgf1.cdn.shift8web.ca/wp-content/uploads/2021/01/Sinar-Terang-Logo.jpg' class='logo'>", unsafe_allow_html=True)
-    
-    st.markdown("<h1>OPTIMASI PRODUKSI - PT SINAR TERANG MANDIRI</h1>", unsafe_allow_html=True)
     
     st.markdown("""
     <p style='font-size: 18px;'>
