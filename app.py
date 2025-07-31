@@ -5,6 +5,8 @@ import pulp
 from math import sqrt
 from scipy.optimize import linprog
 import sympy as sp
+import json
+import base64
 
 st.set_page_config(page_title="Model Matematika", layout="wide")
 
