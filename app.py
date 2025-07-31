@@ -5,6 +5,7 @@ import pulp
 from math import sqrt
 from scipy.optimize import linprog
 import sympy as sp
+import pandas as pd
 import json
 import base64
 
