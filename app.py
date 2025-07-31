@@ -175,13 +175,6 @@ with tab1:
 
 with tab2:
     st.header("\U0001F4E6 MODEL PERSEDIAAN – EOQ (ECONOMIC ORDER QUANTITY)")
-    st.write("""
-    Aplikasi ini menghitung Economic Order Quantity (EOQ) dan visualisasi biaya total
-    menggunakan rumus:
-    **EOQ** = √(2DS/H)  
-    **Total Cost** = (D/Q)S + (Q/2)H
-    """)
-
     st.markdown("Simulasi sistem persediaan barang untuk menentukan jumlah pemesanan optimal (EOQ).")
     
     tab1, tab2 = st.tabs(["🔢 Input Manual", "📘 Studi Kasus Budi Jaya"])
