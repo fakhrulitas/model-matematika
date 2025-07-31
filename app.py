@@ -9,7 +9,7 @@ import pandas as pd
 import json
 import base64
 
-st.set_page_config(page_title="Model Matematika", layout="wide")
+st.set_page_config(page_title="Model Matematika", layout="centered")
 
 # Sidebar Dokumentasi
 st.sidebar.header("Panduan Aplikasi")
